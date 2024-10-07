@@ -292,31 +292,34 @@ class GestionProductos:
             if connection.is_connected():
                 connection.close()
 
-
     def mostrar_todos_los_productos(self):
+        productos = []
         try:
             connection = self.connect()
             if connection:
                 with connection.cursor(dictionary=True) as cursor:
                     cursor.execute('SELECT * FROM producto')
                     productos_data = cursor.fetchall()
-                    productos = []
                     if productos_data:
                         for producto in productos_data:
                             id_producto = producto['id_producto']
-                            cursor.execute('SELECT vencimiento FROM productoalimenticio WHERE id_producto =%s', (id_producto,))
-                            vencimiento = cursor.fetchone
+                            cursor.execute('SELECT vencimiento FROM productoalimenticio WHERE id_producto = %s', (id_producto,))
+                            vencimiento = cursor.fetchone()
                             if vencimiento:
-                                productos_data['vencimiento'] = vencimiento['vencimiento']
-                                producto = ProductoAlimenticio(**productos_data)
+                                producto['vencimiento'] = vencimiento['vencimiento']  
+                                producto_obj = ProductoAlimenticio(**producto)
                             else:
                                 cursor.execute('SELECT garantia FROM productoelectronico WHERE id_producto = %s', (id_producto,))
                                 garantia = cursor.fetchone()
-                                productos_data['vencimiento'] = vencimiento['vencimiento']
-                                producto = ProductoElectronico(**productos_data)
-                            productos.append(producto)
+                                if garantia: 
+                                    producto['garantia'] = garantia['garantia']  
+                                    producto_obj = ProductoElectronico(**producto) 
+                                else:
+                                    producto_obj = Producto(**producto) 
+                            productos.append(producto_obj)  
         except Exception as e:
             print(f"Error al mostrar todos los productos: {e}")
         finally:
             if connection.is_connected():
                 connection.close()
+        return productos

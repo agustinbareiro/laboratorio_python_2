@@ -75,9 +75,9 @@ def mostrar_productos(gestion):
         print("------------------------------Lista de todos los Productos------------------------------")
         for producto in productos:
             if isinstance(productos, ProductoAlimenticio):
-                print(f"Producto Electronico: {producto.nombre}, Precio: ${producto.precio}, Stock: {producto.stock}, Vencimiento: {producto.vencimiento}. ")
+                print(f"Producto Alimenticio: {producto.nombre}, Precio: ${producto.precio}, Stock: {producto.stock}, Vencimiento: {producto.vencimiento}. ")
             else:
-                print(f"Producto Alimenticio: {producto.nombre}, Precio: ${producto.precio}, Stock: {producto.stock}, Garantía: {producto.garantia} meses.")
+                print(f"Producto Electronico: {producto.nombre}, Precio: ${producto.precio}, Stock: {producto.stock}, Garantía: {producto.garantia} meses.")
         print("----------------------------------------------------------------------------------------")
     except Exception as e:
         print(f"Error al mostrar todos los productos {e}")
